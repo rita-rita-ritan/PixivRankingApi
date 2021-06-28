@@ -9,6 +9,9 @@ verify_ssl = true
 falcon = "*"
 gunicorn = "*"
 pytest = "*"
+requests = "*"
+beautifulsoup4 = "*"
+schedule = "*"
 
 [requires]
 python_version = "3.8"
