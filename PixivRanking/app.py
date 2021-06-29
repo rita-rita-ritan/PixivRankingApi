@@ -1,8 +1,8 @@
 import falcon
-from .images import Resource
+from .daily_illust_rankings_interface import DailyIllustRankingsInterface
 
 app = application = falcon.App()
 # note: Gunicorn, by default, expects this to be called "application"
 
-images = Resource()
-app.add_route("/images", images)
+image = DailyIllustRankingsInterface()
+app.add_route("/image", image)
