@@ -23,17 +23,30 @@ class DailyIllustRankings:
         self.get_now_time()
         soup = BeautifulSoup(source_html.text, "html.parser")
 
-        creator_names = soup.select(".user-name")
-        creator_urls = soup.select(".user-container")
-        work_titles = soup.select(".title")
-        work_urls = ["https://www.pixiv.net" + work_html["href"] 
-                        for work_html in soup.select(".work")]
-
-        for i in range(self.len_works):
-            self.works[i + 1]["creator_name"] = creator_names[i].get_text()
-            self.works[i + 1]["creator_url"] = "https://www.pixiv.net" + creator_urls[i]["href"]
-            self.works[i + 1]["work_title"] = work_titles[i].get_text()
-            self.works[i + 1]["work_url"] = work_urls[i]
+        creator_names = [creator_name.get_text() for creator_name
+                        in soup.select(".user-name") if creator_name.get_text()]
+        creator_urls = ["https://www.pixiv.net" + creator_relative_url["href"] 
+                        for creator_relative_url in soup.select(".user-container") 
+                        if creator_relative_url["href"]]
+        work_titles = [work_title.get_text() for work_title 
+                        in soup.select(".title") if work_title.get_text()]
+        work_urls = ["https://www.pixiv.net" + work_relative_url["href"] 
+                        for work_relative_url in soup.select(".work")
+                        if work_relative_url["href"]]
+        
+        if len(creator_names) == len(creator_urls) == len(work_titles) == len(work_urls):
+            for i in range(self.len_works):
+                self.works[i + 1]["creator_name"] = creator_names[i]
+                self.works[i + 1]["creator_url"] = creator_urls[i]
+                self.works[i + 1]["work_title"] = work_titles[i]
+                self.works[i + 1]["work_url"] = work_urls[i]
+        else:
+            print("error: Failed to get the ranking information.")
+            for i in range(self.len_works):
+                self.works[i + 1]["creator_name"] = "うまく準備できなかったようです……(ノω・、`) ｺﾞﾒﾝ"
+                self.works[i + 1]["creator_url"] = ""
+                self.works[i + 1]["work_title"] = "うまく準備できなかったようです……(ノω・、`) ｺﾞﾒﾝ"
+                self.works[i + 1]["work_url"] = ""
 
     def get_work_opengraph(self, rank, work_url):
         # rank:int (1-indexed)
@@ -53,7 +66,16 @@ class DailyIllustRankings:
 
         # head > meta property="og:image"
         og_image_url = soup.select_one('meta[property="og:image"]')["content"]
-        self.works[rank]["opengraph_creator_image_url"] = og_image_url
+        time.sleep(1)
+        try:
+            response = requests.get(og_image_url)
+            response.raise_for_status()
+            print(f"{rank}/{self.len_works}: {response.status_code}")
+            self.works[rank]["opengraph_creator_image_url"] = og_image_url
+        except requests.exceptions.RequestException as e:
+            print(f"{rank}/{self.len_works}: Cannot get creator image: ",e)
+            self.works[rank]["opengraph_creator_image_url"] = ""
+        
 
         # head > meta property="og:description"
         creator_description = soup.select_one('meta[property="og:description"]')["content"]
