@@ -1,16 +1,18 @@
-# PixivQuiz
-PixivQuiz is a game where you look at the works in the Pixiv ranking and guess the painter.
+# pixivQuiz
+[pixivQuiz](https://www.pixivquiz.net/) is a game where you look at works in the pixiv ranking and guess the painter.
 
-## What I'v done and what I'll do
-Now that the creation of the service is roughly complete, I'm in the process of deploying it.
+[visit pixivQuiz](https://www.pixivquiz.net/)
 
-Demo in progress (actually, illustrations are displayed, but due to rights issues, the demo only shows approximate behavior)
+## TODO
+* OGP: WIP
+## API Demo
+
 |![demo2.1](https://user-images.githubusercontent.com/38023004/123744440-bfb19d00-d8e9-11eb-827e-fba359d2fd02.gif)|
 |:-:|
 
 ## Architecture
-- Frontend: Vue.js
-- Backend: Falcon (Python)
+- [Frontend](https://github.com/rita-rita-ritan/PixvQuizWeb): Vue.js, Netlify
+- Backend: Falcon (Python), GAE
 
 
 ---
