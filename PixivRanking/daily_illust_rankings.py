@@ -93,7 +93,6 @@ class DailyIllustRankings:
             json.dump({"timestamp": self.timestamp, **self.works}, f, indent=4)
 
 if __name__ == "__main__":
-    # for test
     ranking = DailyIllustRankings()
     ranking.get_work_urls_from_ranking()
     ranking.get_opengraphs()
